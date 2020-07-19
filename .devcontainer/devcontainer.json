@@ -1,0 +1,22 @@
+{
+	"name": "AWS DLC PyTorch",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"settings": {
+		"terminal.integrated.shell.linux": "/bin/bash",
+		"python.pythonPath": "/opt/conda/bin/python",
+		"python.linting.enabled": true,
+		"python.linting.pylintEnabled": false,
+		"python.linting.flake8Enabled": true,
+		"python.linting.flake8Path": "/opt/conda/bin/flake8",
+		"editor.formatOnSave": true,
+		"python.formatting.provider": "yapf",
+		"python.formatting.yapfPath": "/opt/conda/bin/yapf",
+		"python.linting.mypyEnabled": true,
+		"python.linting.mypyPath": "/opt/conda/bin/mypy",
+	},
+	"extensions": [
+		"ms-python.python"
+	]
+}
