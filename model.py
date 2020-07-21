@@ -1,4 +1,5 @@
-from torch import nn
+import torch
+from torch import nn, cuda
 import torch.nn.functional as F
 import torch.distributed as dist
 import torch.optim as optim
@@ -19,7 +20,8 @@ class Model(nn.Module):
         x = F.relu(self.conv2(x))
         x = self.dropout(x)
         x = x.view(x.size(0), -1)  # Flatten
-        return F.relu(self.dense(x))
+        x = F.relu(self.dense(x))
+        return F.log_softmax(x)
 
 
 def _average_gradients(model):
@@ -52,10 +54,8 @@ def test(model, test_loader, device):
         for data, target in test_loader:
             data, target = data.to(device), target.to(device)
             output = model(data)
-            test_loss_sum += F.nll_loss(
-                output, target, size_average=False).item()  # sum up batch loss
-            pred = output.max(
-                1, keepdim=True)[1]  # get the index of the max log-probability
+            test_loss_sum += F.nll_loss(output, target, reduction='sum').cpu().data  # sum up batch loss
+            pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
             correct += pred.eq(target.view_as(pred)).sum().item()
     accuracy = correct / len(test_loader.dataset)
     test_loss_avg = test_loss_sum / len(test_loader.dataset)
