@@ -57,8 +57,8 @@ def train(args):
     for epoch in range(1, args.epochs + 1):
         logger.info(f'epoch: {epoch}/{args.epochs}')
         md.train(model, train_loader, device, is_distributed, args.lr, args.momentum)
-        accuracy, test_loss_avg = md.test(model, test_loader, device)
-        logger.info(f'test accuracy: {accuracy}, test_loss_avg: {test_loss_avg}')
+        test_accuracy, test_loss_avg = md.test(model, test_loader, device)
+        logger.info(f'test_accuracy: {test_accuracy}, test_loss_avg: {test_loss_avg}')
     save_model(model, args.model_dir)
 
 
