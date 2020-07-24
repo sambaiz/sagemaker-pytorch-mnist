@@ -57,13 +57,13 @@ def train(args):
     for epoch in range(1, args.epochs + 1):
         logger.info(f'epoch: {epoch}/{args.epochs}')
         md.train(model, train_loader, device, is_distributed, args.lr, args.momentum)
-        test_accuracy, test_loss_avg = md.test(model, test_loader, device)
-        logger.info(f'test_accuracy: {test_accuracy}, test_loss_avg: {test_loss_avg}')
+        test_accuracy, test_loss = md.test(model, test_loader, device)
+        logger.info(f'test accuracy: {test_accuracy}, test loss: {test_loss};')
     save_model(model, args.model_dir)
 
 
 def save_model(model, model_dir):
-    path = os.path.join(model_dir, 'model.pth')
+    path = os.path.join(model_dir, 'model.pt')
     # recommended way from http://pytorch.org/docs/master/notes/serialization.html
     torch.save(model.cpu().state_dict(), path)
 
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     parser.add_argument('--num-gpus', type=int, default=os.environ.get('SM_NUM_GPUS', 0))
 
     # fit() inputs (SM_CHANNEL_XXXX)
-    parser.add_argument('--data-dir', type=str, default=os.environ.get('SM_CHANNEL_TRAINING', '.'))
+    parser.add_argument('--data-dir', type=str, default=os.environ.get('SM_CHANNEL_TRAINING', 'mnist'))
 
     args = parser.parse_args()
     args.hosts = json.loads(args.hosts)

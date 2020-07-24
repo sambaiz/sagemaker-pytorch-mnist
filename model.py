@@ -26,7 +26,7 @@ class Model(nn.Module):
 def _average_gradients(model):
     size = float(dist.get_world_size())
     for param in model.parameters():
-        dist.all_reduce(param.grad.data, op=dist.reduce_op.SUM, group=0)
+        dist.all_reduce(param.grad.data, op=dist.ReduceOp.SUM)
         param.grad.data /= size
 
 
@@ -58,5 +58,5 @@ def test(model, test_loader, device):
             pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
             correct += pred.eq(target.view_as(pred)).sum().item()
     accuracy = correct / len(test_loader.dataset)
-    loss_avg = loss_sum / len(test_loader.dataset)
-    return accuracy, loss_avg
+    loss = loss_sum / len(test_loader.dataset)
+    return accuracy, loss
