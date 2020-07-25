@@ -64,10 +64,9 @@ def train(args):
 
 def save_model(model, model_dir):
     path = os.path.join(model_dir, 'model.pt')
-    # recommended way from http://pytorch.org/docs/master/notes/serialization.html
-    torch.save(model.cpu().state_dict(), path)
+    torch.jit.save(torch.jit.script(model.module), path)
 
-
+    
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
