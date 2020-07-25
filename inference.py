@@ -1,5 +1,5 @@
 import torch
-import numpy as np
+
 
 def predict_fn(input_data, model):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -9,5 +9,3 @@ def predict_fn(input_data, model):
     with torch.jit.optimized_execution(True, {"target_device": "eia:0"}):
         output = model(input_data)
         return output
-
-    
