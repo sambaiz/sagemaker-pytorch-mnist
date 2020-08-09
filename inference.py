@@ -8,4 +8,4 @@ def predict_fn(input_data, model):
     model.eval()
     with torch.jit.optimized_execution(True, {"target_device": "eia:0"}):
         output = model(input_data)
-        return output.max(1, keepdim=True)[1]
+        return output.max(1)[1]
